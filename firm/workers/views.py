@@ -40,14 +40,20 @@ class DriverLogViewSet(viewsets.ViewSet):
 
         result = []
         for driver_id, times in data.items():
-            working_hours, working_remainder = divmod(times['working_time'].total_seconds(), 3600)
-            working_minutes, working_seconds = divmod(working_remainder, 60)
+            working_seconds = int(times['working_time'].total_seconds())
+            working_hours = working_seconds // 3600
+            working_minutes = (working_seconds % 3600) // 60
+            working_seconds = working_seconds % 60
 
-            resting_hours, resting_remainder = divmod(times['resting_time'].total_seconds(), 3600)
-            resting_minutes, resting_seconds = divmod(resting_remainder, 60)
+            resting_seconds = int(times['resting_time'].total_seconds())
+            resting_hours = resting_seconds // 3600
+            resting_minutes = (resting_seconds % 3600) // 60
+            resting_seconds = resting_seconds % 60
 
-            off_hours, off_remainder = divmod(times['off_time'].total_seconds(), 3600)
-            off_minutes, off_seconds = divmod(off_remainder, 60)
+            off_seconds = int(times['off_time'].total_seconds())
+            off_hours = off_seconds // 3600
+            off_minutes = (off_seconds % 3600) // 60
+            off_seconds = off_seconds % 60
 
             result.append({
                 'company_id': times['company_id'],
