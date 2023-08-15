@@ -40,27 +40,16 @@ class DriverLogViewSet(viewsets.ViewSet):
 
         result = []
         for driver_id, times in data.items():
-            working_seconds = int(times['working_time'].total_seconds())
-            working_hours = working_seconds // 3600
-            working_minutes = (working_seconds % 3600) // 60
-            working_seconds = working_seconds % 60
-
-            resting_seconds = int(times['resting_time'].total_seconds())
-            resting_hours = resting_seconds // 3600
-            resting_minutes = (resting_seconds % 3600) // 60
-            resting_seconds = resting_seconds % 60
-
-            off_seconds = int(times['off_time'].total_seconds())
-            off_hours = off_seconds // 3600
-            off_minutes = (off_seconds % 3600) // 60
-            off_seconds = off_seconds % 60
+            working_time = format_timedelta(times['working_time'])
+            resting_time = format_timedelta(times['resting_time'])
+            off_time = format_timedelta(times['off_time'])
 
             result.append({
                 'company_id': times['company_id'],
                 'driver_id': driver_id,
-                'working_time': f'{int(working_hours)} hours, {int(working_minutes)} minutes, {int(working_seconds)} seconds',
-                'resting_time': f'{int(resting_hours)} hours, {int(resting_minutes)} minutes, {int(resting_seconds)} seconds',
-                'off_time': f'{int(off_hours)} hours, {int(off_minutes)} minutes, {int(off_seconds)} seconds'
+                'working_time': working_time,
+                'resting_time': resting_time,
+                'off_time': off_time
             })
 
         return Response(result)
@@ -102,21 +91,24 @@ class DriverLogWeeklyViewSet(viewsets.ViewSet):
 
         result = []
         for driver_id, times in data.items():
-            working_hours, working_remainder = divmod(times['working_time'].total_seconds(), 3600)
-            working_minutes, working_seconds = divmod(working_remainder, 60)
-
-            resting_hours, resting_remainder = divmod(times['resting_time'].total_seconds(), 3600)
-            resting_minutes, resting_seconds = divmod(resting_remainder, 60)
-
-            off_hours, off_remainder = divmod(times['off_time'].total_seconds(), 3600)
-            off_minutes, off_seconds = divmod(off_remainder, 60)
+            working_time = format_timedelta(times['working_time'])
+            resting_time = format_timedelta(times['resting_time'])
+            off_time = format_timedelta(times['off_time'])
 
             result.append({
                 'company_id': times['company_id'],
                 'driver_id': driver_id,
-                'working_time': f'{int(working_hours)} hours, {int(working_minutes)} minutes, {int(working_seconds)} seconds',
-                'resting_time': f'{int(resting_hours)} hours, {int(resting_minutes)} minutes, {int(resting_seconds)} seconds',
-                'off_time': f'{int(off_hours)} hours, {int(off_minutes)} minutes, {int(off_seconds)} seconds'
+                'working_time': working_time,
+                'resting_time': resting_time,
+                'off_time': off_time
             })
 
         return Response(result)
+
+
+def format_timedelta(td):
+    total_seconds = int(td.total_seconds())
+    hours = total_seconds // 3600
+    minutes = (total_seconds % 3600) // 60
+    seconds = total_seconds % 60
+    return f'{hours} hours, {minutes} minutes, {seconds} seconds'
