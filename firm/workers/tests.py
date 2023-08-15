@@ -41,6 +41,4 @@ class DriverLogWeeklyViewSetTestCase(TestCase):
 
         print(response.data)  # Print the response data for debugging
 
-        # Add your assertions to test the response data
-        # For example, you can assert the length of the response data
         self.assertEqual(len(response.data), 1)
