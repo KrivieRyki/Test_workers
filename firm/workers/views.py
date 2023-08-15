@@ -6,7 +6,6 @@ from .models import DriverLog
 from rest_framework.response import Response
 from datetime import timedelta, datetime
 
-
 class DriverLogViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = DriverLog.objects.all()
@@ -58,10 +57,11 @@ class DriverLogViewSet(viewsets.ViewSet):
 
         return Response(result)
 
-
 class DriverLogWeeklyViewSet(viewsets.ViewSet):
     def list(self, request):
-        week_start = datetime.now() - timedelta(days=datetime.now().weekday())
+        now = datetime.now()
+        days_since_monday = now.weekday()
+        week_start = now - timedelta(days=days_since_monday)
         queryset = DriverLog.objects.filter(create_date__gte=week_start)
 
         data = {}

@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class DriverLog(models.Model):
     STATUS_CHOICES = (
         ('working', 'Working'),
