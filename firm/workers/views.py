@@ -5,6 +5,8 @@ from django.db.models.functions import Coalesce, Greatest
 from .models import DriverLog
 from rest_framework.response import Response
 from datetime import timedelta, datetime
+from django.utils import timezone
+
 
 class DriverLogViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -57,15 +59,18 @@ class DriverLogViewSet(viewsets.ViewSet):
 
         return Response(result)
 
+
 class DriverLogWeeklyViewSet(viewsets.ViewSet):
     def list(self, request):
-        now = datetime.now()
+        now = timezone.now()
+
         days_since_monday = now.weekday()
         week_start = now - timedelta(days=days_since_monday)
         queryset = DriverLog.objects.filter(create_date__gte=week_start)
 
         data = {}
         for log in queryset:
+            print(f"Processing log for driver {log.driver_id}, status: {log.status}, create_date: {log.create_date}")
             if log.driver_id not in data:
                 data[log.driver_id] = {
                     'company_id': log.company_id,
