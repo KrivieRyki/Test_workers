@@ -1,7 +1,8 @@
 from rest_framework import serializers
-from .models import DriverLog
 
-class DriverLogSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DriverLog
-        fields = '__all__'
+
+class DriverLogWeeklySerializer(serializers.Serializer):
+    driver_id = serializers.IntegerField()
+    working_time = serializers.DurationField()
+    resting_time = serializers.DurationField()
+    off_time = serializers.DurationField()
